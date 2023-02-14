@@ -1,0 +1,12 @@
+version: '3.9'
+
+services:
+  kamasutraescort.api:
+    image: shukharatovich/kamasutraescort
+    container_name: kamasutraescort
+    restart: always
+    ports:
+      - 3000:3000
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./.env:/opt/app/.env
