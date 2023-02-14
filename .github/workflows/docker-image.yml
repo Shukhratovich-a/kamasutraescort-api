@@ -13,7 +13,7 @@ jobs:
       - name: Build the Docker image
         run: |
           docker build -t kamasutraescort .
-          export CR_PAT=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 
+          export CR_PAT=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  
           echo $CR_PAT | docker login ghcr.io -u USERNAME --password-stdin
           docker tag kamasutraescort ghcr.io/shukharatovich-a/kamasutraescort
           docker push ghcr.io/shukharatovich-a/kamasutraescort
