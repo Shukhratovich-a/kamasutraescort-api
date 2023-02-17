@@ -75,6 +75,8 @@ export class AuthService {
       }),
     ).pipe(
       switchMap((user: User) => {
+        console.log(user);
+
         if (!user) {
           throw new HttpException(
             { status: HttpStatus.FORBIDDEN, error: 'Invalid Credentials' },

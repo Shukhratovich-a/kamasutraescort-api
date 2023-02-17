@@ -13,7 +13,7 @@ import { JwtStrategy } from './guards/jwt.strategy';
     JwtModule.registerAsync({
       useFactory: () => ({
         secret: process.env.JWT_SECRET,
-        signOptions: { expiresIn: '3600s' },
+        signOptions: { expiresIn: '10s' },
       }),
     }),
     TypeOrmModule.forFeature([UserEntity]),
