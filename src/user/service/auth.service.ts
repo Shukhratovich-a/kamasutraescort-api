@@ -72,7 +72,6 @@ export class AuthService {
   async checkUser(header: CheckUserDto) {
     try {
       const { user } = this.jwtService.verify(header.authorization);
-      console.log(user);
 
       const data = await this.findOne(user.username, user.email);
       if (!data) {
