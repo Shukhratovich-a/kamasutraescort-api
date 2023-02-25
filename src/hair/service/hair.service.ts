@@ -22,15 +22,15 @@ export class HairService {
     return hairs;
   }
 
-  async create({ hairNameEn, hairNameRu }: HairDto) {
+  async create({ nameEn, nameRu }: HairDto) {
     const oldHair = await this.hairRepository.findOne({
-      where: [{ hairNameEn }, { hairNameRu }],
+      where: [{ nameEn }, { nameRu }],
     });
     if (oldHair) {
       throw new HttpException('this hair name exits', HttpStatus.BAD_REQUEST);
     }
 
-    const hair = await this.hairRepository.save({ hairNameEn, hairNameRu });
+    const hair = await this.hairRepository.save({ nameEn, nameRu });
     if (!hair) {
       throw new HttpException('bad request', HttpStatus.BAD_REQUEST);
     }
@@ -42,7 +42,7 @@ export class HairService {
     };
   }
 
-  async update(id: number, { hairNameEn, hairNameRu }: HairDto) {
+  async update(id: number, { nameEn, nameRu }: HairDto) {
     const oldHair = await this.hairRepository.findOne({
       where: { id },
     });
@@ -50,18 +50,18 @@ export class HairService {
       throw new HttpException('hair not found', HttpStatus.BAD_REQUEST);
     }
 
-    const hairNameCheck = await this.hairRepository.findOne({
-      where: [{ hairNameEn, hairNameRu }],
+    const nameCheck = await this.hairRepository.findOne({
+      where: [{ nameEn, nameRu }],
     });
-    if (hairNameCheck) {
+    if (nameCheck) {
       throw new HttpException('this hair name exits', HttpStatus.BAD_REQUEST);
     }
 
     const hair = await this.hairRepository.save({
       ...oldHair,
       ...{
-        hairNameEn: hairNameEn ? hairNameEn : oldHair.hairNameEn,
-        hairNameRu: hairNameRu ? hairNameRu : oldHair.hairNameRu,
+        nameEn: nameEn,
+        nameRu: nameRu,
       },
     });
     if (!hair) {

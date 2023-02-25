@@ -3,7 +3,7 @@ import {
   CreateDateColumn,
   Entity,
   JoinColumn,
-  OneToOne,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -11,6 +11,8 @@ import {
 import { GenderEnum } from 'src/enums/gender.enum';
 import { HairEntity } from 'src/hair/hair.entity';
 import { EyeColorEntity } from 'src/eye/eye-color.entity';
+import { GoalEntity } from 'src/goal/goal.entity';
+import { RegionEntity } from 'src/region/region.entity';
 
 @Entity('user')
 export class UserEntity {
@@ -20,20 +22,20 @@ export class UserEntity {
   @Column({ type: 'varchar', nullable: false, length: 32, unique: true })
   username: string;
 
-  @Column({ type: 'varchar', nullable: true, length: 128 })
-  fullname: string;
-
   @Column({ type: 'varchar', nullable: false, length: 128, unique: true })
   email: string;
 
   @Column({ type: 'varchar', nullable: false, length: 128 })
   password: string;
 
+  @Column({ type: 'enum', nullable: false, enum: GenderEnum })
+  gender: GenderEnum;
+
   @Column({ type: 'timestamp', nullable: false })
   birthDate: Date;
 
-  @Column({ type: 'enum', nullable: false, enum: GenderEnum })
-  gender: GenderEnum;
+  @Column({ type: 'varchar', nullable: true, length: 128 })
+  fullname: string;
 
   @Column({ type: 'numeric', nullable: true })
   height: number;
@@ -44,16 +46,21 @@ export class UserEntity {
   @Column({ type: 'varchar', nullable: true, length: 1024 })
   about: string;
 
-  @Column({ type: 'varchar', nullable: true, length: 256 })
-  goal: string;
+  @ManyToOne(() => RegionEntity, (region) => region.id, { nullable: false })
+  @JoinColumn({ name: 'reigonId' })
+  region: number;
 
-  @OneToOne(() => HairEntity, (hair) => hair.id)
-  @JoinColumn()
-  hairColor: HairEntity;
+  @ManyToOne(() => GoalEntity, (goal) => goal.id, { nullable: true })
+  @JoinColumn({ name: 'goalId' })
+  goal: number;
 
-  @OneToOne(() => EyeColorEntity, (eye) => eye.id)
-  @JoinColumn()
-  eyeColor: HairEntity;
+  @ManyToOne(() => HairEntity, (hair) => hair.id, { nullable: true })
+  @JoinColumn({ name: 'hairColorId' })
+  hairColor: number;
+
+  @ManyToOne(() => EyeColorEntity, (eye) => eye.id, { nullable: true })
+  @JoinColumn({ name: 'eyeColorId' })
+  eyeColor: number;
 
   @CreateDateColumn({
     type: 'timestamp',

@@ -22,17 +22,17 @@ export class EyeColorService {
     return eyes;
   }
 
-  async create({ eyeColorNameEn, eyeColorNameRu }: EyeColorDto) {
+  async create({ nameEn, nameRu }: EyeColorDto) {
     const oldEye = await this.eyeColorRepository.findOne({
-      where: [{ eyeColorNameEn }, { eyeColorNameRu }],
+      where: [{ nameEn }, { nameRu }],
     });
     if (oldEye) {
       throw new HttpException('this eye name exits', HttpStatus.BAD_REQUEST);
     }
 
     const eye = await this.eyeColorRepository.save({
-      eyeColorNameEn,
-      eyeColorNameRu,
+      nameEn,
+      nameRu,
     });
     if (!eye) {
       throw new HttpException('bad request', HttpStatus.BAD_REQUEST);
@@ -45,7 +45,7 @@ export class EyeColorService {
     };
   }
 
-  async update(id: number, { eyeColorNameEn, eyeColorNameRu }: EyeColorDto) {
+  async update(id: number, { nameEn, nameRu }: EyeColorDto) {
     const oldEye = await this.eyeColorRepository.findOne({
       where: { id },
     });
@@ -54,7 +54,7 @@ export class EyeColorService {
     }
 
     const eyeNameCheck = await this.eyeColorRepository.findOne({
-      where: [{ eyeColorNameEn, eyeColorNameRu }],
+      where: [{ nameEn, nameRu }],
     });
     if (eyeNameCheck) {
       throw new HttpException('this eye name exits', HttpStatus.BAD_REQUEST);
@@ -62,10 +62,7 @@ export class EyeColorService {
 
     const eye = await this.eyeColorRepository.save({
       ...oldEye,
-      ...{
-        eyeColorNameEn: eyeColorNameEn,
-        eyeColorNameRu: eyeColorNameRu,
-      },
+      ...{ nameEn, nameRu },
     });
     if (!eye) {
       throw new HttpException('bad request', HttpStatus.BAD_REQUEST);

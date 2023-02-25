@@ -1,8 +1,10 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { RegionDto } from '../dto/region.dto';
+
 import { RegionEntity } from '../region.entity';
+
+import { RegionDto } from '../dto/region.dto';
 
 @Injectable()
 export class RegionService {
@@ -20,15 +22,13 @@ export class RegionService {
     return regions;
   }
 
-  async create(body: RegionDto) {
-    const regionName = await this.regionRepository.findOne({
-      where: { regionName: body.regionName },
-    });
+  async create({ nameEn, nameRu }: RegionDto) {
+    const regionName = await this.regionRepository.findOne({ where: [{ nameEn, nameRu }] });
     if (regionName) {
       throw new HttpException('this region name exits', HttpStatus.BAD_REQUEST);
     }
 
-    const region = await this.regionRepository.save(body);
+    const region = await this.regionRepository.save({ nameEn, nameRu });
     if (!region) {
       throw new HttpException('bad request', HttpStatus.BAD_REQUEST);
     }
@@ -40,25 +40,18 @@ export class RegionService {
     };
   }
 
-  async update(id: number, { regionName }: RegionDto) {
-    const oldRegion = await this.regionRepository.findOne({
-      where: { id },
-    });
+  async update(id: number, { nameEn, nameRu }: RegionDto) {
+    const oldRegion = await this.regionRepository.findOne({ where: { id } });
     if (!oldRegion) {
       throw new HttpException('region not found', HttpStatus.BAD_REQUEST);
     }
 
-    const regionNameCheck = await this.regionRepository.findOne({
-      where: { regionName },
-    });
+    const regionNameCheck = await this.regionRepository.findOne({ where: [{ nameEn, nameRu }] });
     if (regionNameCheck) {
       throw new HttpException('region name exits', HttpStatus.BAD_REQUEST);
     }
 
-    const region = await this.regionRepository.save({
-      ...oldRegion,
-      ...{ regionName },
-    });
+    const region = await this.regionRepository.save({ ...oldRegion, ...{ nameEn, nameRu } });
     if (!region) {
       throw new HttpException('bad request', HttpStatus.BAD_REQUEST);
     }
@@ -71,9 +64,7 @@ export class RegionService {
   }
 
   async delete(id: number) {
-    const oldRegion = await this.regionRepository.findOne({
-      where: { id },
-    });
+    const oldRegion = await this.regionRepository.findOne({ where: { id } });
     if (!oldRegion) {
       throw new HttpException('region not found', HttpStatus.BAD_REQUEST);
     }

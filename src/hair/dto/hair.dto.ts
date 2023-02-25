@@ -2,8 +2,8 @@ import { IsString } from 'class-validator';
 
 export class HairDto {
   @IsString()
-  hairNameEn: string;
+  nameEn: string;
 
   @IsString()
-  hairNameRu: string;
+  nameRu: string;
 }

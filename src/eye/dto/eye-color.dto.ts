@@ -2,8 +2,8 @@ import { IsString } from 'class-validator';
 
 export class EyeColorDto {
   @IsString()
-  eyeColorNameEn: string;
+  nameEn: string;
 
   @IsString()
-  eyeColorNameRu: string;
+  nameRu: string;
 }

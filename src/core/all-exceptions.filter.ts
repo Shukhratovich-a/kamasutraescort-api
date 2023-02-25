@@ -1,18 +1,9 @@
-import {
-  ArgumentsHost,
-  Catch,
-  ExceptionFilter,
-  HttpException,
-  HttpStatus,
-} from '@nestjs/common';
+import { ArgumentsHost, Catch, ExceptionFilter, HttpException, HttpStatus } from '@nestjs/common';
 import { Response, Request } from 'express';
 
 import * as fs from 'fs';
 
-import {
-  CustomHttpExceptionResponse,
-  HttpExceptionResponse,
-} from './models/http-exception-response.interface';
+import { CustomHttpExceptionResponse, HttpExceptionResponse } from './models/http-exception-response.interface';
 
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {
@@ -27,8 +18,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
     if (exception instanceof HttpException) {
       status = exception.getStatus();
       const errorResponse = exception.getResponse();
-      errorMessage =
-        (errorResponse as HttpExceptionResponse).error || exception.message;
+      errorMessage = exception.message || (errorResponse as HttpExceptionResponse).error;
     } else {
       status = HttpStatus.INTERNAL_SERVER_ERROR;
       errorMessage = 'Critical internal server error occurred!';
@@ -52,11 +42,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
     timeStamp: new Date(),
   });
 
-  private getErrorLog = (
-    errorResponse: CustomHttpExceptionResponse,
-    request: Request,
-    exception: unknown,
-  ): string => {
+  private getErrorLog = (errorResponse: CustomHttpExceptionResponse, request: Request, exception: unknown): string => {
     const { statusCode, error } = errorResponse;
     const { method, url } = request;
     const errorLog = `Response Code: ${statusCode} - Method: ${method} - URL: ${url}\n\n${JSON.stringify(

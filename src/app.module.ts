@@ -10,6 +10,7 @@ import { UserModule } from './user/user.module';
 import { RegionModule } from './region/region.module';
 import { HairModule } from './hair/hair.module';
 import { EyeColorModule } from './eye/eye-color.module';
+import { GoalModule } from './goal/goal.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { EyeColorModule } from './eye/eye-color.module';
     RegionModule,
     HairModule,
     EyeColorModule,
+    GoalModule,
   ],
   providers: [
     {

@@ -1,27 +1,20 @@
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  Index,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { Column, CreateDateColumn, Entity, Index, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity('hairs', {
   orderBy: {
     id: 'ASC',
   },
 })
-@Index(['hairNameEn', 'hairNameRu'], { unique: true })
+@Index(['nameEn', 'nameRu'])
 export class HairEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column({ type: 'varchar', nullable: false, length: 32, unique: true })
-  hairNameEn: string;
+  nameEn: string;
 
   @Column({ type: 'varchar', nullable: false, length: 32, unique: true })
-  hairNameRu: string;
+  nameRu: string;
 
   @CreateDateColumn({
     type: 'timestamp',

@@ -1,27 +1,20 @@
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  Index,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { Column, CreateDateColumn, Entity, Index, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity('eyes', {
   orderBy: {
     id: 'ASC',
   },
 })
-@Index(['eyeColorNameEn', 'eyeColorNameRu'], { unique: true })
+@Index(['nameEn', 'nameRu'])
 export class EyeColorEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column({ type: 'varchar', nullable: false, length: 32, unique: true })
-  eyeColorNameEn: string;
+  nameEn: string;
 
   @Column({ type: 'varchar', nullable: false, length: 32, unique: true })
-  eyeColorNameRu: string;
+  nameRu: string;
 
   @CreateDateColumn({
     type: 'timestamp',

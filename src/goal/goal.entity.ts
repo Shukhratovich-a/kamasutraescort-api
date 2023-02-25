@@ -1,19 +1,19 @@
 import { Column, CreateDateColumn, Entity, Index, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
-@Entity('regions', {
+@Entity('goals', {
   orderBy: {
     id: 'ASC',
   },
 })
 @Index(['nameEn', 'nameRu'])
-export class RegionEntity {
+export class GoalEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'varchar', nullable: false, length: 64, unique: true })
+  @Column({ type: 'varchar', nullable: false, length: 256, unique: true })
   nameEn: string;
 
-  @Column({ type: 'varchar', nullable: false, length: 64, unique: true })
+  @Column({ type: 'varchar', nullable: false, length: 256, unique: true })
   nameRu: string;
 
   @CreateDateColumn({
