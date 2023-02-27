@@ -1,17 +1,17 @@
 import { GenderEnum } from 'src/enums/gender.enum';
 
 export class UserEditDto {
-  username: string;
+  username?: string;
 
-  email: string;
+  email?: string;
 
-  password: string;
+  password?: string;
 
-  region: number;
+  region?: number;
 
-  gender: GenderEnum;
+  gender?: GenderEnum;
 
-  birthDate: Date;
+  birthDate?: Date;
 
   fullname?: string;
 
@@ -26,4 +26,6 @@ export class UserEditDto {
   hairColor?: number;
 
   eyeColor?: number;
+
+  images?: number;
 }

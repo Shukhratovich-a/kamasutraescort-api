@@ -1,15 +1,7 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Patch,
-  Post,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
 
-import { EyeColorDto } from '../dto/eye-color.dto';
-import { EyeColorService } from '../service/eye-color.service';
+import { EyeColorDto } from '../dtos/eye-color.dto';
+import { EyeColorService } from '../services/eye-color.service';
 
 @Controller('eye-color')
 export class EyeColorController {

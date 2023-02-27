@@ -3,9 +3,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { RegionEntity } from './region.entity';
 
-import { RegionController } from './controller/region.controller';
+import { RegionController } from './controllers/region.controller';
 
-import { RegionService } from './service/region.service';
+import { RegionService } from './services/region.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([RegionEntity])],

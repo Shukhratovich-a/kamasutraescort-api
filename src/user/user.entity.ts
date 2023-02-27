@@ -4,6 +4,7 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -13,8 +14,10 @@ import { HairEntity } from 'src/hair/hair.entity';
 import { EyeColorEntity } from 'src/eye/eye-color.entity';
 import { GoalEntity } from 'src/goal/goal.entity';
 import { RegionEntity } from 'src/region/region.entity';
+import { ImageEntity } from 'src/image/image.entity';
+import { SocialsEntity } from 'src/socials/socials.entity';
 
-@Entity('user')
+@Entity('users')
 export class UserEntity {
   @PrimaryGeneratedColumn()
   id: number;
@@ -61,6 +64,14 @@ export class UserEntity {
   @ManyToOne(() => EyeColorEntity, (eye) => eye.id, { nullable: true })
   @JoinColumn({ name: 'eyeColorId' })
   eyeColor: number;
+
+  @OneToOne(() => ImageEntity, (image) => image.user, { nullable: true })
+  @JoinColumn({ name: 'imageId' })
+  images: number;
+
+  @OneToOne(() => SocialsEntity, (socials) => socials.id, { nullable: true })
+  @JoinColumn({ name: 'socialsIs' })
+  socials: number | null;
 
   @CreateDateColumn({
     type: 'timestamp',

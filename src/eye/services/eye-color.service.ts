@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 
 import { EyeColorEntity } from '../eye-color.entity';
 
-import { EyeColorDto } from '../dto/eye-color.dto';
+import { EyeColorDto } from '../dtos/eye-color.dto';
 
 @Injectable()
 export class EyeColorService {

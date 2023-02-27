@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 
 import { GoalEntity } from '../goal.entity';
 
-import { GoalDto } from '../dto/goal.dto';
+import { GoalDto } from '../dtos/goal.dto';
 
 @Injectable()
 export class GoalService {

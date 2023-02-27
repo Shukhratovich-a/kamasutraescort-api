@@ -3,9 +3,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { EyeColorEntity } from './eye-color.entity';
 
-import { EyeColorController } from './controller/eye-color.controller';
+import { EyeColorController } from './controllers/eye-color.controller';
 
-import { EyeColorService } from './service/eye-color.service';
+import { EyeColorService } from './services/eye-color.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([EyeColorEntity])],

@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
 
-import { GoalDto } from '../dto/goal.dto';
-import { GoalService } from '../service/goal.service';
+import { GoalDto } from '../dtos/goal.dto';
+import { GoalService } from '../services/goal.service';
 
 @Controller('goal')
 export class GoalController {

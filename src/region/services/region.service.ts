@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 
 import { RegionEntity } from '../region.entity';
 
-import { RegionDto } from '../dto/region.dto';
+import { RegionDto } from '../dtos/region.dto';
 
 @Injectable()
 export class RegionService {

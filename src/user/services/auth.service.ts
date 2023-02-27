@@ -28,18 +28,23 @@ export class AuthService {
       ...body,
       password: await hash(body.password, salt),
     });
+    const user = await this.userRepository.save(newUser);
+
+    if (!user) {
+      throw new BadRequestException(WRONG_PASSWORD_ERROR);
+    }
 
     return {
       status: HttpStatus.CREATED,
       message: 'ok',
-      user: await this.userRepository.save(newUser),
+      user,
     };
   }
 
   async findUser(username?: string, email?: string) {
     return await this.userRepository.findOne({
       where: [{ username }, { email }],
-      relations: ['hairColor', 'eyeColor', 'region', 'goal'],
+      relations: ['hairColor', 'eyeColor', 'region', 'goal', 'images', 'socials'],
     });
   }
 

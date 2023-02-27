@@ -3,9 +3,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { HairEntity } from './hair.entity';
 
-import { HairController } from './controller/hair.controller';
+import { HairController } from './controllers/hair.controller';
 
-import { HairService } from './service/hair.service';
+import { HairService } from './services/hair.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([HairEntity])],

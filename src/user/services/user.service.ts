@@ -1,6 +1,7 @@
-import { UnauthorizedException, BadRequestException, Injectable, HttpStatus } from '@nestjs/common';
+import { UnauthorizedException, BadRequestException, NotFoundException, Injectable, HttpStatus } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
+import { compare } from 'bcrypt';
 
 import { Repository } from 'typeorm';
 
@@ -10,12 +11,12 @@ import {
   USER_NOT_FOUND_ERROR,
   WRONG_PASSWORD_ERROR,
 } from '../constants/user.constant';
+import { GenderEnum } from 'src/enums/gender.enum';
 
 import { UserEntity } from '../user.entity';
 
 import { UserEditDto } from '../dtos/user/user-edit.dto';
 import { CheckUserDto } from '../dtos/check-user.dto';
-import { compare } from 'bcrypt';
 
 @Injectable()
 export class UserService {
@@ -24,6 +25,37 @@ export class UserService {
     private readonly userRepository: Repository<UserEntity>,
     private jwtService: JwtService,
   ) {}
+
+  async getAll() {
+    const users = await this.userRepository.find({
+      relations: ['hairColor', 'eyeColor', 'goal', 'region', 'images', 'socials'],
+    });
+    if (!users) {
+      throw new NotFoundException(USER_NOT_FOUND_ERROR);
+    }
+
+    return users;
+  }
+
+  async getByGender(gender: GenderEnum) {
+    const options = { where: { gender } };
+    const users = await this.userRepository.find({
+      ...options,
+      relations: ['hairColor', 'eyeColor', 'goal', 'region', 'images', 'socials'],
+    });
+
+    return users;
+  }
+
+  async getByUsername(username: string) {
+    const options = { where: { username } };
+    const users = await this.userRepository.findOne({
+      ...options,
+      relations: ['hairColor', 'eyeColor', 'goal', 'region', 'images', 'socials'],
+    });
+
+    return users;
+  }
 
   async update(id: number, body: UserEditDto, headers: CheckUserDto) {
     try {
@@ -75,5 +107,27 @@ export class UserService {
 
       throw new BadRequestException(BAD_REQUEST_ERROR);
     }
+  }
+
+  async updateImage(id: number, imageId: number) {
+    const user = await this.userRepository.findOne({ where: { id } });
+
+    const withImages = await this.userRepository.save({
+      ...user,
+      images: imageId,
+    });
+
+    return withImages;
+  }
+
+  async updateSocials(id: number | null, socialId: number) {
+    const user = await this.userRepository.findOne({ where: { id } });
+
+    const withSocials = await this.userRepository.save({
+      ...user,
+      socials: socialId,
+    });
+
+    return withSocials;
   }
 }

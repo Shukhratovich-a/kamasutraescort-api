@@ -1,15 +1,7 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Patch,
-  Post,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
 
-import { HairDto } from '../dto/hair.dto';
-import { HairService } from '../service/hair.service';
+import { HairDto } from '../dtos/hair.dto';
+import { HairService } from '../services/hair.service';
 
 @Controller('hairs')
 export class HairController {

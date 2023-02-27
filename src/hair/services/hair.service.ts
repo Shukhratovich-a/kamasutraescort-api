@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 
 import { HairEntity } from '../hair.entity';
 
-import { HairDto } from '../dto/hair.dto';
+import { HairDto } from '../dtos/hair.dto';
 
 @Injectable()
 export class HairService {
