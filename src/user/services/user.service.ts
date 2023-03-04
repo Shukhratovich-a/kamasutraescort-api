@@ -1,22 +1,21 @@
-import { UnauthorizedException, BadRequestException, NotFoundException, Injectable, HttpStatus } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import { InjectRepository } from '@nestjs/typeorm';
-import { compare } from 'bcrypt';
+import { Injectable, NotFoundException, BadRequestException, HttpStatus } from "@nestjs/common";
+import { JwtService } from "@nestjs/jwt";
+import { InjectRepository } from "@nestjs/typeorm";
 
-import { Repository } from 'typeorm';
+import { Repository } from "typeorm";
 
 import {
-  BAD_REQUEST_ERROR,
-  INVALID_TOKEN_ERROR,
   USER_NOT_FOUND_ERROR,
-  WRONG_PASSWORD_ERROR,
-} from '../constants/user.constant';
-import { GenderEnum } from 'src/enums/gender.enum';
+  BAD_REQUEST_ERROR,
+  WRONG_USERNAME_ERROR,
+  WRONG_EMAIL_ERROR,
+} from "../constants/user.constant";
 
-import { UserEntity } from '../user.entity';
+import { UserEntity } from "../user.entity";
 
-import { UserEditDto } from '../dtos/user/user-edit.dto';
-import { CheckUserDto } from '../dtos/check-user.dto';
+import { RoleEnum } from "src/enums/role.enum";
+
+import { UserUpdateDto } from "../dtos/user/update-user.dto";
 
 @Injectable()
 export class UserService {
@@ -26,108 +25,108 @@ export class UserService {
     private jwtService: JwtService,
   ) {}
 
-  async getAll() {
+  async getAll(limit = 10, page = 1) {
     const users = await this.userRepository.find({
-      relations: ['hairColor', 'eyeColor', 'goal', 'region', 'images', 'socials'],
+      take: limit,
+      skip: limit * (page - 1),
+      order: { createdAt: "ASC" },
+      select: ["id", "username", "email", "role", "birthDate", "region", "avatar", "createdAt", "updatedAt"],
+      relations: ["avatar", "region"],
     });
     if (!users) {
-      throw new NotFoundException(USER_NOT_FOUND_ERROR);
+      throw new NotFoundException();
     }
 
     return users;
   }
 
-  async getByGender(gender: GenderEnum) {
-    const options = { where: { gender } };
+  async getByRole(role: RoleEnum, limit = 10, page = 1) {
     const users = await this.userRepository.find({
-      ...options,
-      relations: ['hairColor', 'eyeColor', 'goal', 'region', 'images', 'socials'],
+      where: { role },
+      take: limit,
+      skip: limit * (page - 1),
+      order: { createdAt: "ASC" },
+      select: ["id", "username", "email", "role", "birthDate", "region", "avatar", "createdAt", "updatedAt"],
+      relations: ["region", "avatar"],
     });
+    if (!users) {
+      throw new NotFoundException();
+    }
 
     return users;
   }
 
   async getByUsername(username: string) {
-    const options = { where: { username } };
-    const users = await this.userRepository.findOne({
-      ...options,
-      relations: ['hairColor', 'eyeColor', 'goal', 'region', 'images', 'socials'],
+    const user = await this.userRepository.findOne({
+      where: { username },
+      select: ["id", "username", "email", "role", "birthDate", "region", "avatar", "createdAt", "updatedAt"],
+      relations: ["region", "avatar"],
     });
+    if (!user) {
+      throw new NotFoundException(USER_NOT_FOUND_ERROR);
+    }
 
-    return users;
+    return user;
   }
 
-  async update(id: number, body: UserEditDto, headers: CheckUserDto) {
-    try {
-      const { username } = await this.jwtService.verifyAsync(JSON.parse(headers.authorization));
-      if (!username) {
-        throw new BadRequestException(INVALID_TOKEN_ERROR);
-      }
+  async getById(id: number) {
+    const user = await this.userRepository.findOne({
+      where: { id },
+      select: ["id", "username", "email", "role", "birthDate", "region", "avatar", "createdAt", "updatedAt"],
+      relations: ["region", "avatar"],
+    });
+    if (!user) {
+      throw new NotFoundException(USER_NOT_FOUND_ERROR);
+    }
 
-      const oldUser = await this.userRepository.findOne({ where: { id } });
-      if (!oldUser) {
-        throw new UnauthorizedException(USER_NOT_FOUND_ERROR);
-      }
+    return user;
+  }
 
-      const isCorrectPassword = await compare(body.password, oldUser.password);
-      if (!isCorrectPassword) {
-        throw new UnauthorizedException(WRONG_PASSWORD_ERROR);
-      }
+  async updateUser(id: number, body: UserUpdateDto) {
+    await this.checkUserName({ id, ...body });
 
-      if (oldUser.username !== username) {
-        throw new UnauthorizedException(USER_NOT_FOUND_ERROR);
-      }
-      delete body.password;
+    const oldUser = await this.userRepository.findOne({ where: { id } });
+    if (!oldUser) {
+      throw new NotFoundException(USER_NOT_FOUND_ERROR);
+    }
 
-      const { username: newUsername, eyeColor, hairColor, weight, height, goal, region, ...keys } = body;
-
-      const user = await this.userRepository.save({
-        ...oldUser,
-        ...keys,
-        username: newUsername.toLowerCase(),
-        region: region ? Number(region) : oldUser.region,
-        goal: goal ? Number(goal) : null,
-        height: height ? Number(height) : null,
-        weight: weight ? Number(weight) : null,
-        hairColor: hairColor ? Number(hairColor) : null,
-        eyeColor: eyeColor ? Number(eyeColor) : null,
-      });
-      if (!user) {
-        throw new BadRequestException(BAD_REQUEST_ERROR);
-      }
-
-      return {
-        status: HttpStatus.ACCEPTED,
-        message: 'ok',
-        accessToken: await this.jwtService.signAsync({ newUsername }),
-        user,
-      };
-    } catch (error) {
-      console.log(error);
-
+    const newUser = await this.userRepository.save({ ...oldUser, ...body }, {});
+    if (!newUser) {
       throw new BadRequestException(BAD_REQUEST_ERROR);
     }
+
+    delete newUser.password;
+
+    return {
+      status: HttpStatus.OK,
+      message: "edited",
+      user: newUser,
+    };
   }
 
-  async updateImage(id: number, imageId: number) {
-    const user = await this.userRepository.findOne({ where: { id } });
+  async updateForeignRow(id: number, rowId: number, row: "avatar" | "socails") {
+    const oldUser = await this.userRepository.findOne({ where: { id } });
+    if (!oldUser) throw new NotFoundException(USER_NOT_FOUND_ERROR);
 
-    const withImages = await this.userRepository.save({
-      ...user,
-      images: imageId,
+    const newUser = await this.userRepository.save({
+      ...oldUser,
+      [row]: rowId ? { id: rowId } : null,
     });
+    delete newUser.password;
+    delete newUser[row];
 
-    return withImages;
+    return newUser;
   }
 
-  async updateSocials(id: number | null, socialId: number) {
-    const user = await this.userRepository.findOne({ where: { id } });
+  async checkUserName({ id, username, email }: { id?: number; username?: string; email?: string }) {
+    if (username) {
+      const checkedUser = await this.userRepository.findOne({ where: { username } });
+      if (checkedUser && checkedUser.id != id) throw new BadRequestException(WRONG_USERNAME_ERROR);
+    }
 
-    const withSocials = await this.userRepository.save({
-      ...user,
-      socials: socialId,
-    });
-
-    return withSocials;
+    if (email) {
+      const checkedUser = await this.userRepository.findOne({ where: { email } });
+      if (checkedUser && checkedUser.id != id) throw new BadRequestException(WRONG_EMAIL_ERROR);
+    }
   }
 }

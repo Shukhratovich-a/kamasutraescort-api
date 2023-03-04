@@ -1,29 +1,32 @@
-import {
-  IsDateString,
-  IsEmail,
-  IsEnum,
-  IsString,
-  Length,
-} from 'class-validator';
+import { IsDateString, IsEmail, IsEnum, IsNotEmpty, IsNumber, IsString, Length } from 'class-validator';
 
-import { GenderEnum } from 'src/enums/gender.enum';
+import { RoleEnum } from 'src/enums/role.enum';
 
 export class RegisterDto {
   @IsString()
+  @IsNotEmpty()
   @Length(3, 32)
   username: string;
 
   @IsEmail()
+  @IsNotEmpty()
+  @Length(3, 32)
   email: string;
 
   @IsString()
+  @IsNotEmpty()
   @Length(8, 64)
   password: string;
 
-  @IsString()
+  @IsNotEmpty()
   @IsDateString()
   birthDate: Date;
 
-  @IsEnum(GenderEnum)
-  gender: GenderEnum;
+  @IsEnum(RoleEnum)
+  @IsNotEmpty()
+  role: RoleEnum;
+
+  @IsNumber()
+  @IsNotEmpty()
+  region: number;
 }

@@ -1,47 +1,48 @@
-import { Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { APP_FILTER } from '@nestjs/core';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { join } from "path";
 
-import { AllExceptionsFilter } from './core/all-exceptions.filter';
-import { getPostgresConfig } from './configs/postgres.config';
+import { Module } from "@nestjs/common";
+import { ConfigModule, ConfigService } from "@nestjs/config";
+// import { APP_FILTER } from "@nestjs/core";
+import { TypeOrmModule } from "@nestjs/typeorm";
+import { ServeStaticModule } from "@nestjs/serve-static";
 
-import { UserModule } from './user/user.module';
-import { RegionModule } from './region/region.module';
-import { HairModule } from './hair/hair.module';
-import { EyeColorModule } from './eye/eye-color.module';
-import { GoalModule } from './goal/goal.module';
-import { ImageModule } from './image/image.module';
-import { ServeStaticModule } from '@nestjs/serve-static';
-import { join } from 'path';
-import { StripeModule } from './stripe/stripe.module';
-import { SocialsModule } from './socials/socails.module';
+// import { AllExceptionsFilter } from "./core/all-exceptions.filter";
+import { getPostgresConfig } from "./configs/postgres.config";
+
+import { UserModule } from "./user/user.module";
+import { RegionModule } from "./region/region.module";
+import { HairModule } from "./hair/hair.module";
+import { EyeColorModule } from "./eye/eye-color.module";
+import { GoalModule } from "./goal/goal.module";
+import { AvatarModule } from "./avatar/avatar.module";
+import { SocialsModule } from "./socials/socials.module";
+import { AdvertisementModule } from "./advertisement/advertisement.module";
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true, envFilePath: '.env.dev' }),
+    ConfigModule.forRoot({ isGlobal: true, envFilePath: ".env.dev" }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: getPostgresConfig,
     }),
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'files'),
+      rootPath: join(process.cwd(), "uploads"),
     }),
     UserModule,
     RegionModule,
     HairModule,
     EyeColorModule,
     GoalModule,
-    ImageModule,
+    AvatarModule,
     SocialsModule,
-    StripeModule,
+    AdvertisementModule,
   ],
-  providers: [
-    {
-      provide: APP_FILTER,
-      useClass: AllExceptionsFilter,
-    },
-  ],
+  // providers: [
+  //   {
+  //     provide: APP_FILTER,
+  //     useClass: AllExceptionsFilter,
+  //   },
+  // ],
 })
 export class AppModule {}
