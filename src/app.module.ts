@@ -17,6 +17,7 @@ import { GoalModule } from "./goal/goal.module";
 import { AvatarModule } from "./avatar/avatar.module";
 import { SocialsModule } from "./socials/socials.module";
 import { AdvertisementModule } from "./advertisement/advertisement.module";
+import { AdvImageModule } from "./advImage/advImage.module";
 
 @Module({
   imports: [
@@ -27,7 +28,7 @@ import { AdvertisementModule } from "./advertisement/advertisement.module";
       useFactory: getPostgresConfig,
     }),
     ServeStaticModule.forRoot({
-      rootPath: join(process.cwd(), "uploads"),
+      rootPath: join(process.cwd(), "files"),
     }),
     UserModule,
     RegionModule,
@@ -37,6 +38,7 @@ import { AdvertisementModule } from "./advertisement/advertisement.module";
     AvatarModule,
     SocialsModule,
     AdvertisementModule,
+    AdvImageModule,
   ],
   // providers: [
   //   {

@@ -10,16 +10,12 @@ export class AdvertisementController {
   constructor(private readonly advertisementSerive: AdvertisementSerivce) {}
 
   @Get()
-  async getAll(@Query("limit", ParseIntPipe) limit: number, @Query("page", ParseIntPipe) page: number) {
+  async getAll(@Query("limit") limit: number, @Query("page") page: number) {
     return await this.advertisementSerive.getAll(limit, page);
   }
 
   @Get("username/:username")
-  async getByUsername(
-    @Param("username") username: string,
-    @Query("limit", ParseIntPipe) limit: number,
-    @Query("page", ParseIntPipe) page: number,
-  ) {
+  async getByUsername(@Param("username") username: string, @Query("limit") limit: number, @Query("page") page: number) {
     return await this.advertisementSerive.getByUsername(username, limit, page);
   }
 

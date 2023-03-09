@@ -1,5 +1,6 @@
 import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+
 import { TypeEnum } from "src/enums/type.enum";
 
 import { Repository } from "typeorm";
@@ -20,7 +21,7 @@ export class AdvertisementSerivce {
       take: limit,
       skip: limit * (page - 1),
       order: { createdAt: "ASC" },
-      relations: ["goal", "hairColor", "eyeColor", "user"],
+      relations: ["goal", "hairColor", "eyeColor", "user", "images"],
     });
     if (!advertisements) throw new NotFoundException();
 
@@ -39,7 +40,7 @@ export class AdvertisementSerivce {
       take: limit,
       skip: limit * (page - 1),
       order: { createdAt: "ASC" },
-      relations: ["goal", "hairColor", "eyeColor", "user"],
+      relations: ["goal", "hairColor", "eyeColor", "user", "images"],
     });
     if (!advertisements) throw new NotFoundException();
 
@@ -58,7 +59,7 @@ export class AdvertisementSerivce {
       take: limit,
       skip: limit * (page - 1),
       order: { createdAt: "ASC" },
-      relations: ["goal", "hairColor", "eyeColor", "user"],
+      relations: ["goal", "hairColor", "eyeColor", "user", "images"],
     });
     if (!advertisements) throw new NotFoundException();
 
@@ -74,7 +75,7 @@ export class AdvertisementSerivce {
   async getBySearchName(searchName: string) {
     const advertisement = await this.advertismentRepository.findOne({
       where: { searchName },
-      relations: ["goal", "hairColor", "eyeColor", "user"],
+      relations: ["goal", "hairColor", "eyeColor", "user", "images"],
     });
     if (!advertisement) throw new NotFoundException();
     delete advertisement.user.password;

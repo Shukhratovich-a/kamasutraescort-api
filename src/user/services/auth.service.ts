@@ -35,6 +35,7 @@ export class AuthService {
     const salt = await genSalt(10);
 
     const newUser = this.userRepository.create({ ...body, password: await hash(body.password, salt) });
+
     const user = await this.userRepository.save(newUser);
     if (!user) {
       throw new BadRequestException(WRONG_PASSWORD_ERROR);

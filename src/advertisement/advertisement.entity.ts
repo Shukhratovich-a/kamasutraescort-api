@@ -5,6 +5,7 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
@@ -14,6 +15,7 @@ import { HairEntity } from "src/hair/hair.entity";
 import { EyeColorEntity } from "src/eye/eye-color.entity";
 import { GoalEntity } from "src/goal/goal.entity";
 import { UserEntity } from "src/user/user.entity";
+import { AdvImageEntity } from "src/advImage/advImage.entity";
 
 @Entity("advertisements")
 export class AdvertisementEntity extends BaseEntity {
@@ -59,6 +61,10 @@ export class AdvertisementEntity extends BaseEntity {
   @ManyToOne(() => EyeColorEntity, (eye) => eye.id, { nullable: true })
   @JoinColumn({ name: "eyeColorId" })
   eyeColor: EyeColorEntity;
+
+  @OneToOne(() => AdvImageEntity, (image) => image, { nullable: true })
+  @JoinColumn({ name: "imageId" })
+  images: AdvImageEntity;
 
   @CreateDateColumn({
     type: "timestamp",

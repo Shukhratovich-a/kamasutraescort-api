@@ -37,7 +37,7 @@ export class UserEntity {
   @Column({ type: "timestamp", nullable: false })
   birthDate: Date;
 
-  @OneToMany(() => AdvertisementEntity, (advertisement) => advertisement.user, { nullable: true })
+  @OneToMany(() => AdvertisementEntity, (advertisement) => advertisement, { nullable: true })
   @JoinColumn({ name: "advertisements" })
   advertisments: AdvertisementEntity[];
 
