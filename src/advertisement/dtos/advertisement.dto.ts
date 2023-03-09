@@ -12,6 +12,9 @@ export class AdvertisementDto {
   @IsEnum(TypeEnum)
   type: TypeEnum;
 
+  @IsNumber()
+  region: number;
+
   @ValidateIf((o) => o.fullname)
   @IsString()
   fullname: string;

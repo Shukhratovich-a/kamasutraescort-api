@@ -84,13 +84,14 @@ export class AdvertisementSerivce {
   }
 
   async create(id: number, body: AdvertisementDto) {
-    const { goal, hairColor, eyeColor, advName, ...keys } = body;
+    const { region, goal, hairColor, eyeColor, advName, ...keys } = body;
     const searchName = advName + "-" + Date.now() + Math.round(Math.random() * 1e9);
 
     const advertisementTemp = this.advertismentRepository.create({
       ...keys,
       advName,
       searchName,
+      region: { id: region },
       goal: goal ? { id: goal } : null,
       hairColor: hairColor ? { id: hairColor } : null,
       eyeColor: eyeColor ? { id: eyeColor } : null,
@@ -100,11 +101,15 @@ export class AdvertisementSerivce {
 
     if (!advertisement) throw new BadRequestException();
 
-    return advertisement;
+    return {
+      status: 201,
+      message: "ok",
+      advertisement,
+    };
   }
 
   async edit(id: number, body: AdvertisementDto) {
-    const { goal, hairColor, eyeColor, advName, ...keys } = body;
+    const { region, goal, hairColor, eyeColor, advName, ...keys } = body;
 
     const oldAdvertisement = await this.advertismentRepository.findOne({ where: { id } });
     if (!oldAdvertisement) throw new NotFoundException();
@@ -113,6 +118,7 @@ export class AdvertisementSerivce {
       ...oldAdvertisement,
       ...keys,
       advName,
+      region: { id: region },
       goal: goal ? { id: goal } : null,
       hairColor: hairColor ? { id: hairColor } : null,
       eyeColor: eyeColor ? { id: eyeColor } : null,

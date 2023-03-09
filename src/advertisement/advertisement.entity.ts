@@ -11,6 +11,7 @@ import {
 } from "typeorm";
 
 import { TypeEnum } from "src/enums/type.enum";
+import { RegionEntity } from "src/region/region.entity";
 import { HairEntity } from "src/hair/hair.entity";
 import { EyeColorEntity } from "src/eye/eye-color.entity";
 import { GoalEntity } from "src/goal/goal.entity";
@@ -33,6 +34,10 @@ export class AdvertisementEntity extends BaseEntity {
 
   @Column({ type: "enum", nullable: false, enum: TypeEnum })
   type: TypeEnum;
+
+  @ManyToOne(() => RegionEntity, (region) => region.id, { nullable: false })
+  @JoinColumn({ name: "regionId" })
+  region: RegionEntity;
 
   @ManyToOne(() => UserEntity, (user) => user.advertisments, { nullable: false })
   @JoinColumn({ name: "userId" })
